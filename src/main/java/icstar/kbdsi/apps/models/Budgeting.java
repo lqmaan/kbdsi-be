@@ -8,12 +8,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.Instant;
 
 @Entity
-@Table(name="transaction")
-public class Transaction {
+@Table(name="budgeting")
+public class Budgeting {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="transaction_id")
-    private long transactionId;
+    @Column(name="budget_id")
+    private long budgetId;
 
     @Column(name="name")
     private String name;
@@ -44,16 +45,22 @@ public class Transaction {
     @Column(name="updatedBy")
     private String updatedBy;
 
-
-    public Transaction() {
+    public Budgeting() {
     }
-
-    public Transaction(String name, String type, long categoryId, Integer amount, String description) {
+    public Budgeting(String name, String type, long categoryId, Integer amount, String description) {
         this.name = name;
         this.type = type;
         this.categoryId = categoryId;
         this.amount = amount;
         this.description = description;
+    }
+
+    public long getBudgetId() {
+        return budgetId;
+    }
+
+    public void setBudgetId(long budgetId) {
+        this.budgetId = budgetId;
     }
 
     public String getName() {

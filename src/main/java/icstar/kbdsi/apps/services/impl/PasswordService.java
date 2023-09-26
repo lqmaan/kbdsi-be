@@ -1,4 +1,4 @@
-package icstar.kbdsi.apps.services;
+package icstar.kbdsi.apps.services.impl;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

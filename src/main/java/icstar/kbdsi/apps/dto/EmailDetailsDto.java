@@ -12,4 +12,8 @@ public class EmailDetailsDto {
     private String msgBody;
     private String subject;
     private String attachment;
+    private Integer amount;
+    private String description;
+    private String scheduleDate;
+    private String paymentDate;
 }

@@ -1,4 +1,4 @@
 package icstar.kbdsi.apps.services;
 
-public class CategoryServiceImpl {
+public interface BudgettingService {
 }

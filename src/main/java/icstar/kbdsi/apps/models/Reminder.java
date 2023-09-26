@@ -11,6 +11,7 @@ import java.time.Instant;
 import java.util.Date;
 
 @Entity
+@Table(name="reminder")
 public class Reminder {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

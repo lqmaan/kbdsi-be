@@ -2,11 +2,14 @@ package icstar.kbdsi.apps.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.antlr.v4.runtime.misc.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SourceType;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Data
@@ -17,26 +20,35 @@ public class Category {
     @Column(name="category_id")
     private long categoryId;
 
+    @NotNull
     @Column(name="category_name")
     private String categoryName;
 
-
     @CreationTimestamp(source = SourceType.DB)
     @Column(name="createdAt")
-    private Instant createdAt;
+    private Date createdAt;
 
     @UpdateTimestamp(source = SourceType.DB)
     @Column(name="updatedAt")
-    private Instant updatedAt;
+    private Date updatedAt;
 
     @Column(name="isDeleted", columnDefinition = "boolean default false")
     private boolean isDeleted;
 
+    @NotNull
+    @Column(name="createdBy")
+    private String createdBy;
+
+    @Column(name="updatedBy")
+    private String updatedBy;
+
+
     public Category() {
     }
 
-    public Category(String categoryName) {
+    public Category(String categoryName, String createdBy) {
         this.categoryName = categoryName;
+        this.createdBy = createdBy;
     }
 
     public long getCategoryId() {
@@ -55,19 +67,19 @@ public class Category {
         this.categoryName = categoryName;
     }
 
-    public Instant getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Instant createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Instant getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Instant updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -77,5 +89,21 @@ public class Category {
 
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
     }
 }

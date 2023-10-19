@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto {
-    String name;
-    Integer pageNum;
-    Integer pageSize;
+public class PaginationBudgetDto {
+    String year;
+    int pageNum;
+    int pageSize;
 }

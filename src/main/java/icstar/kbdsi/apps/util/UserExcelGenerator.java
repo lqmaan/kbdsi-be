@@ -11,17 +11,23 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Objects;
+import java.util.Locale;
 
 import static org.apache.poi.ss.util.CellUtil.createCell;
 
-public class ExcelGenerator {
+public class UserExcelGenerator {
     private List<User> userList;
     private XSSFWorkbook workbook;
     private XSSFSheet sheet;
 
-    public ExcelGenerator(List<User> userList){
+
+    private static final String PATTERN_FORMAT = "dd/MM/yyyy HH:mm";
+
+    public UserExcelGenerator(List<User> userList){
         this.userList = userList;
         workbook = new XSSFWorkbook();
     }
@@ -34,11 +40,14 @@ public class ExcelGenerator {
         font.setBold(true);
         font.setFontHeight(16);
         style.setFont(font);
-        createCell(row, 0, "ID", style);
-        createCell(row, 1, "Name", style);
-        createCell(row, 2, "Email", style);
-        createCell(row, 3, "Phone", style);
-        createCell(row, 4, "Role", style);
+        style.setWrapText(true);
+        createCell(row, 0, "No", style);
+        createCell(row, 1, "ID", style);
+        createCell(row, 2, "Name", style);
+        createCell(row, 3, "Email", style);
+        createCell(row, 4, "Phone", style);
+        createCell(row, 5, "Role", style);
+        createCell(row, 6, "CreatedAt", style);
     }
 
     private void createCell(Row row, int columnCount, Object valueofCell, CellStyle style){
@@ -52,7 +61,7 @@ public class ExcelGenerator {
         else if(valueofCell instanceof String){
             cell.setCellValue((String) valueofCell);
         }
-        else{
+        else if(valueofCell instanceof Boolean){
             cell.setCellValue((Boolean) valueofCell);
         }
         cell.setCellStyle(style);
@@ -62,17 +71,27 @@ public class ExcelGenerator {
         int rowCount = 1;
         CellStyle style = workbook.createCellStyle();
         XSSFFont font = workbook.createFont();
+        SimpleDateFormat dateFormatGmt7 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+
         font.setFontHeight(14);
         style.setFont(font);
+        style.setWrapText(true);
 
+
+        int num = 0;
         for(User person:userList){
             Row row = sheet.createRow(rowCount++);
             int columnCount= 0;
+            createCell(row, columnCount++, ++num, style);
             createCell(row, columnCount++, person.getId(), style);
             createCell(row, columnCount++, person.getName(), style);
             createCell(row, columnCount++, person.getEmail(), style);
             createCell(row, columnCount++, person.getPhone(), style);
             createCell(row, columnCount++, person.getRoles(), style);
+            String formatCreated = dateFormatGmt7.format(person.getCreatedAt());
+            createCell(row, columnCount++, Convert.ConvertToLocalTime(formatCreated,"Asia/Jakarta"), style);
+
         }
     }
 

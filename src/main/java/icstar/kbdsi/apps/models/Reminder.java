@@ -1,6 +1,7 @@
 package icstar.kbdsi.apps.models;
 
 import jakarta.persistence.*;
+import org.antlr.v4.runtime.misc.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SourceType;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -18,50 +19,59 @@ public class Reminder {
     @Column(name="reminder_id")
     private long reminderId;
 
+
+    @NotNull
     @Column(name="email")
     private String email;
 
+    @NotNull
     @Column(name="description")
     private String description;
 
-    //Ongoing, Done, Cancel
+    //Ongoing, Done
+
+    @NotNull
     @Column(name="status", columnDefinition = "varchar(255) default 'ongoing'")
     private String status;
-//    @Temporal(TemporalType.DATE)
-//    @CreatedDate
+
+    @NotNull
     @Column(name="schedule_date")
     private Date scheduleDate;
 
-//    @Temporal(TemporalType.DATE)
-//    @CreatedDate
+    @NotNull
     @Column(name="payment_date")
     private Date paymentDate;
 
+    @NotNull
     @Column(name="amount")
     private Integer amount;
 
     @CreationTimestamp(source = SourceType.DB)
     @Column(name="createdAt")
-    private Instant createdAt;
+    private Date createdAt;
 
     @UpdateTimestamp(source = SourceType.DB)
     @Column(name="updatedAt")
-    private Instant updatedAt;
+    private Date updatedAt;
 
     @Column(name="isDeleted", columnDefinition = "boolean default false")
     private boolean isDeleted;
     @Column(name="isRepeated", columnDefinition = "boolean default false")
     private boolean isRepeated;
 
+    @Column(name="isSend", columnDefinition = "boolean default false")
+    private boolean isSend;
+
     @Column(name="updatedBy")
     private String updatedBy;
+    @NotNull
     @Column(name="createdBy")
     private String createdBy;
 
     public Reminder() {
     }
 
-    public Reminder(String email, String description, Integer amount, Boolean isRepeated, String createdBy, String status, Date scheduleDate, Date paymentDate) {
+    public Reminder(String email, String description, Integer amount, boolean isRepeated, String createdBy, String status, Date scheduleDate, Date paymentDate) {
         this.email = email;
         this.description = description;
         this.scheduleDate = scheduleDate;
@@ -121,19 +131,19 @@ public class Reminder {
         this.paymentDate = paymentDate;
     }
 
-    public Instant getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Instant createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Instant getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Instant updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -175,5 +185,33 @@ public class Reminder {
 
     public void setUpdatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
+    }
+
+    public boolean isSend() {
+        return isSend;
+    }
+
+    public void setSend(boolean send) {
+        isSend = send;
+    }
+
+    @Override
+    public String toString() {
+        return "Reminder{" +
+                "reminderId=" + reminderId +
+                ", email='" + email + '\'' +
+                ", description='" + description + '\'' +
+                ", status='" + status + '\'' +
+                ", scheduleDate=" + scheduleDate +
+                ", paymentDate=" + paymentDate +
+                ", amount=" + amount +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", isDeleted=" + isDeleted +
+                ", isRepeated=" + isRepeated +
+                ", isSend=" + isSend +
+                ", updatedBy='" + updatedBy + '\'' +
+                ", createdBy='" + createdBy + '\'' +
+                '}';
     }
 }

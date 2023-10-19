@@ -15,6 +15,7 @@ public class ReminderDetailsDto {
     private Integer amount;
     private boolean isRepeated;
     private String createdBy;
+    private String updatedBy;
     private String status;
     private String scheduleDate;
     private String paymentDate;

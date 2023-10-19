@@ -18,23 +18,16 @@ public interface UserService {
 
     User getUserByName(String name);
 
-    boolean authUser(String email, String password);
-
     ResponseEntity<User> updateUserById(User newUser, Long id);
 
     UserDetails loadUserByEmail(String email);
     
     void createUser(User user);
 
-    void saveUser(User user);
-//    Page<User> findUsersWithPagination(Integer pageNum, Integer pageSize);
-
-    Page<User> findUsersContainingName(String name, Integer pageNum, Integer pageSize);
+    Page<User> findUsersContainingName(String name, boolean isDeleted, Integer pageNum, Integer pageSize);
 
 
-//    Page<User> findUsersWithPaginationwithSorting(Integer pageNum, Integer pageSize, String name);
 
 
-//    @Override
-//    ResponseEntity<User> createUser(User user);
+
 }

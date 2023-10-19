@@ -1,8 +1,12 @@
 package icstar.kbdsi.apps.controllers;
 
+import icstar.kbdsi.apps.dto.DeleteDto;
+import icstar.kbdsi.apps.models.Budgeting;
 import icstar.kbdsi.apps.models.Category;
 import icstar.kbdsi.apps.models.User;
 import icstar.kbdsi.apps.repository.CategoryRepository;
+import icstar.kbdsi.apps.services.CategoryService;
+import icstar.kbdsi.apps.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,12 +16,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
+@CrossOrigin(origins = {"http://localhost:4200", "http://https://kbdsi-icstar-fe.vercel.app/", "https://kbdsi-icstar-g0cg82eie-lh007lucky-gmailcom.vercel.app/" })
+
 @RestController
 @RequestMapping("/api")
 public class CategoryController {
 
     @Autowired
     CategoryRepository categoryRepo;
+    CategoryService categoryService;
+
+    public CategoryController(CategoryService categoryService) {
+        super();
+        this.categoryService = categoryService;
+    }
+
 
     @GetMapping("/category")
     public ResponseEntity<List<Category>> getAllCategory (@RequestParam(required = false) String name){
@@ -25,9 +39,7 @@ public class CategoryController {
             List<Category> categories = new ArrayList<>();
 
             if(name == null)
-                categories.addAll(categoryRepo.findAll());
-//            else
-//                categoryRepository.findAllByName(name, PageRequest.of(0, 10, Sort.by("name").ascending()));
+                categories.addAll(categoryService.getAllCategory());
             if(categories.isEmpty()){
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -42,7 +54,7 @@ public class CategoryController {
     @PostMapping("/category")
     public ResponseEntity<Category> createCategory(@RequestBody Category category){
         try{
-            Category newCategory =  new Category(category.getCategoryName());
+            Category newCategory =  new Category(category.getCategoryName(), category.getCreatedBy());
             categoryRepo.save(newCategory);
             return new ResponseEntity<>(HttpStatus.CREATED);
         }catch (Exception e){
@@ -51,11 +63,19 @@ public class CategoryController {
         }
     }
 
-    @DeleteMapping("/category/{id}")
-    public ResponseEntity<String> deleteCategory(@PathVariable(required = true) Long id) {
+    @PutMapping("/category/delete/{id}")
+    public ResponseEntity<String> deleteCategory(@PathVariable(required = true) Long id, @RequestBody DeleteDto deleteDto) {
         try {
-            categoryRepo.deleteById(id);
-            return new ResponseEntity<>("Category has been deleted",HttpStatus.OK);
+            Optional<Category> optCategory = categoryRepo.findById(id);
+            if(optCategory.isPresent()) {
+                Category oldCategory = optCategory.get();
+                oldCategory.setDeleted(true);
+                oldCategory.setUpdatedBy(deleteDto.getUpdatedBy());
+                return new ResponseEntity<>("Category has been deleted",HttpStatus.OK);
+            }
+            else{
+                return new ResponseEntity<>("Category doesn't exist",HttpStatus.NOT_FOUND);
+            }
         }catch (Exception ex) {
             ex.printStackTrace();
             return new ResponseEntity<>(ex.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
@@ -68,6 +88,7 @@ public class CategoryController {
         if(optCategory.isPresent()) {
             Category oldCategory = optCategory.get();
             oldCategory.setCategoryName(newCategory.getCategoryName());
+            oldCategory.setUpdatedBy(newCategory.getUpdatedBy());
             return new ResponseEntity<>(categoryRepo.save(oldCategory),HttpStatus.OK);
         }else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

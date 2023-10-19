@@ -1,13 +1,10 @@
 package icstar.kbdsi.apps.controllers;
 
-import icstar.kbdsi.apps.dto.APIResponse;
-import icstar.kbdsi.apps.dto.LoginDto;
-import icstar.kbdsi.apps.dto.UserDetailsDto;
-import icstar.kbdsi.apps.dto.UserDto;
+import icstar.kbdsi.apps.dto.*;
 import icstar.kbdsi.apps.models.User;
 import icstar.kbdsi.apps.repository.UserRepository;
 import icstar.kbdsi.apps.services.UserService;
-import icstar.kbdsi.apps.util.ExcelGenerator;
+import icstar.kbdsi.apps.util.UserExcelGenerator;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,7 +22,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-//@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = {"http://localhost:4200", "http://https://kbdsi-icstar-fe.vercel.app/", "https://kbdsi-icstar-g0cg82eie-lh007lucky-gmailcom.vercel.app/" })
+
 @RestController
 @RequestMapping("/api")
 public class UserController {
@@ -45,10 +43,7 @@ public class UserController {
             List<User> users = new ArrayList<User>();
 
             if(name == null)
-//                userRepository.findAll().forEach((users::add));
                 userService.getAllUsers().forEach(users::add);
-//            else
-//                userRepository.findAllByName(name, PageRequest.of(0, 10, Sort.by("name").ascending()));
             if(users.isEmpty()){
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -60,26 +55,21 @@ public class UserController {
         }
     }
 
-    @GetMapping("/users/auth")
-    public String authUser (@RequestBody String email, String password){
-            boolean res = userService.authUser(email, password);
-            if(res){
-                return "Login Success";
-            }
-            else{
-                return "Login Failed";
-            }
-
-    }
-
     @PostMapping("/users")
     public ResponseEntity<User> createUser(@RequestBody User user){
         try{
-            String pw = new BCryptPasswordEncoder().encode(user.getPassword());
-            user.setPassword(pw);
             System.out.println(user);
-            userRepository.save(new User(user.getName(), user.getEmail(), user.getPhone(), user.getPassword() , user.getRoles()));
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            if(user.getPassword() != null){
+                String pw = new BCryptPasswordEncoder().encode(user.getPassword());
+                user.setPassword(pw);
+                User newUser = new User(user.getName(), user.getEmail(), user.getPhone(), user.getPassword() , user.getRoles());
+                userRepository.save(newUser);
+                return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+            }
+            else{
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+
         }catch (Exception e){
             System.out.println(e);
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -90,25 +80,45 @@ public class UserController {
     public ResponseEntity<User> updateUserById(@PathVariable(required = true) Long id, @RequestBody User newUser) {
        return userService.updateUserById(newUser, id);
     }
+    @PutMapping("/users/delete/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable(required = true) Long id, @RequestBody DeleteDto deleteDto) {
+        try {
+            Optional<User> optUser = userRepository.findById(id);
+            if(optUser.isPresent()) {
+                User oldUser = optUser.get();
+                oldUser.setDeleted(true);
+                oldUser.setUpdatedBy(deleteDto.getUpdatedBy());
+                userRepository.save(oldUser);
+            return new ResponseEntity<>("User has been deleted",HttpStatus.OK);
+            }
+            else{
+                return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     @GetMapping("/users/export-to-excel")
     public void exportIntoExcelFile(HttpServletResponse response) throws IOException{
         response.setContentType("application/octet-stream");
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy_HH:mm:ss");
         String currentDateTime = dateFormatter.format(new Date());
 
         String headerKey = "Content-Disposition";
-        String headerValue= "attachment; filename=user" + currentDateTime + ".xlsx";
+        String headerValue= "attachment; filename=user_" + currentDateTime + ".xlsx";
         response.setHeader(headerKey,headerValue);
 
-        List<User> listOfUsers = userRepository.findAll();
-//        List<User> listOfUsers = userService.getAllUsers();
-        ExcelGenerator generator = new ExcelGenerator(listOfUsers);
+//        List<User> listOfUsers = userRepository.findAll();
+        List<User> listOfUsers = userService.getAllUsers();
+        UserExcelGenerator generator = new UserExcelGenerator(listOfUsers);
         generator.generateExcelFile(response);
     }
 
     @PostMapping("/login")
-    public UserDetailsDto loginUser(@RequestBody LoginDto user){
+    public ResponseEntity<UserDetailsDto> loginUser(@RequestBody LoginDto user){
         User loginUser = userService.getUserByEmail(user.getEmail());
         UserDetailsDto res =  new UserDetailsDto();
         if(loginUser != null){
@@ -119,52 +129,27 @@ public class UserController {
                 res.setEmail(loginUser.getEmail());
                 res.setPhone(loginUser.getPhone());
                 res.setRoles(loginUser.getRoles());
-                return res;
+                return new ResponseEntity<>(res, HttpStatus.OK);
             }
             else{
-                return new UserDetailsDto();
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST
+                );
             }
         }
         else{
-            return new UserDetailsDto();
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
 
-//    @GetMapping("/users/page")
-//    private Page<User> getUsersWithPaginationAndSort(@RequestBody UserDto userDto) {
-//        Page<User> users = userService.findUsersWithPagination(userDto.getPageNum(), userDto.getPageSize());
-//        return users;
-//    }
+
 
     @GetMapping("/users/name")
-    private Page<User> getUsersWithFilterName(@RequestBody UserDto userDto) {
-        Page<User> users = userService.findUsersContainingName(userDto.getName(), userDto.getPageNum(), userDto.getPageSize());
+    private Page<User> getUsersWithFilterName(PaginationUserDto paginationUserDto) {
+        Page<User> users = userService.findUsersContainingName(paginationUserDto.getName(), false,  paginationUserDto.getPageNum(), paginationUserDto.getPageSize());
+
         return users;
+
     }
-//    @GetMapping("/users/user")
-//    public ResponseEntity<Map<String, Object>> getAllUsersPaging(@RequestParam(required = false) String roles, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size){
-//      try{
-//          List<User> users = new ArrayList<User>();
-//          Pageable paging = (Pageable) PageRequest.of(page, size);
-//          Page<User> pageUsers;
-//          if(roles ==  null)
-//              pageUsers = userRepository.findAll(paging);
-//          else
-//              pageUsers = userRepository.findByRolesContaining(roles, paging);
-//
-//          users = pageUsers.getContent();
-//          Map<String, Object> response = new HashMap<>();
-//          response.put("users", users);
-//          response.put("currentPage", pageUsers.getNumber());
-//          response.put("totalItems", pageUsers.getTotalElements());
-//          response.put("totalPages", pageUsers.getTotalPages());
-//
-//          return new ResponseEntity<>(response, HttpStatus.OK);
-//      }
-//      catch (Exception e){
-//          return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//      }
-//    }
 
 
 

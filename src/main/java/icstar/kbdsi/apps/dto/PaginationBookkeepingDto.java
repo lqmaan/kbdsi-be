@@ -9,8 +9,11 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReminderDto {
-    private String status;
-    private Integer pageNum;
-    private Integer pageSize;
+public class PaginationBookkeepingDto {
+    String category;
+    String startDate;
+    String endDate;
+    String year;
+    int pageNum;
+    int pageSize;
 }

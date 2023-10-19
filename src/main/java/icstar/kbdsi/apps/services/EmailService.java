@@ -4,6 +4,5 @@ import icstar.kbdsi.apps.dto.EmailDetailsDto;
 
 public interface EmailService {
     String sendSimpleMail(EmailDetailsDto emailDetailsDto);
-
-    String sendMailWithAttachment(EmailDetailsDto emailDetailsDto);
+//    String sendMailWithAttachment(EmailDetailsDto emailDetailsDto);
 }

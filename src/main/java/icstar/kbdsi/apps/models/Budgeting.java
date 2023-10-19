@@ -1,11 +1,13 @@
 package icstar.kbdsi.apps.models;
 
 import jakarta.persistence.*;
+import org.antlr.v4.runtime.misc.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SourceType;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.Date;
 
 @Entity
 @Table(name="budgeting")
@@ -16,43 +18,58 @@ public class Budgeting {
     @Column(name="budget_id")
     private long budgetId;
 
+    @NotNull
     @Column(name="name")
     private String name;
 
+    @NotNull
     @Column(name="type")
     private String type;
 
+    @NotNull
     @Column(name="category")
-    private long categoryId;
+    private String category;
 
+    @NotNull
     @Column(name="amount")
     private Integer amount;
 
+    @NotNull
     @Column(name="description", length = 255)
     private String description;
 
+    @NotNull
+    @Column(name="year")
+    private String year;
+
+
     @CreationTimestamp(source = SourceType.DB)
     @Column(name="createdAt")
-    private Instant createdAt;
+    private Date createdAt;
 
     @UpdateTimestamp(source = SourceType.DB)
     @Column(name="updatedAt")
-    private Instant updatedAt;
+    private Date updatedAt;
 
     @Column(name="isDeleted", columnDefinition = "boolean default false")
     private boolean isDeleted;
 
+    @NotNull
+    @Column(name="createdBy")
+    private String createdBy;
     @Column(name="updatedBy")
     private String updatedBy;
 
     public Budgeting() {
     }
-    public Budgeting(String name, String type, long categoryId, Integer amount, String description) {
+    public Budgeting(String name, String type, String category, Integer amount, String description, String year, String createdBy) {
         this.name = name;
         this.type = type;
-        this.categoryId = categoryId;
+        this.category = category;
         this.amount = amount;
         this.description = description;
+        this.year = year;
+        this.createdBy = createdBy;
     }
 
     public long getBudgetId() {
@@ -79,12 +96,12 @@ public class Budgeting {
         this.type = type;
     }
 
-    public long getCategoryId() {
-        return categoryId;
+    public String getCategory() {
+        return category;
     }
 
-    public void setCategoryId(long categoryId) {
-        this.categoryId = categoryId;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public Integer getAmount() {
@@ -103,19 +120,27 @@ public class Budgeting {
         this.description = description;
     }
 
-    public Instant getCreatedAt() {
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Instant createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Instant getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Instant updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -133,5 +158,31 @@ public class Budgeting {
 
     public void setUpdatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    @Override
+    public String toString() {
+        return "Budgeting{" +
+                "budgetId=" + budgetId +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", category='" + category + '\'' +
+                ", amount=" + amount +
+                ", description='" + description + '\'' +
+                ", year='" + year + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", isDeleted=" + isDeleted +
+                ", createdBy='" + createdBy + '\'' +
+                ", updatedBy='" + updatedBy + '\'' +
+                '}';
     }
 }

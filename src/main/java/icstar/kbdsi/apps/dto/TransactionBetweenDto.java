@@ -5,12 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReminderDto {
-    private String status;
-    private Integer pageNum;
-    private Integer pageSize;
+public class TransactionBetweenDto {
+    String startDate;
+    String endDate;
 }

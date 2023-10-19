@@ -2,11 +2,13 @@ package icstar.kbdsi.apps.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.antlr.v4.runtime.misc.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SourceType;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -18,15 +20,19 @@ public class User {
     @Column(name="id")
     private long userId;
 
+    @NotNull
     @Column(name="name")
     private String name;
 
+    @NotNull
     @Column(name="email")
     private String email;
 
+    @NotNull
     @Column(name="phone")
     private String phone;
 
+    @NotNull
     @Column(name="password")
     private String password;
 
@@ -35,17 +41,21 @@ public class User {
 
     @CreationTimestamp(source = SourceType.DB)
     @Column(name="createdAt")
-    private Instant createdAt;
+    private Date createdAt;
 
     @UpdateTimestamp(source = SourceType.DB)
     @Column(name="updatedAt")
-    private Instant updatedAt;
+    private Date updatedAt;
 
     @Column(name="isDeleted", columnDefinition = "boolean default false")
-    private boolean isDeleted;
+    private boolean deleted;
 
     @Column(name="updatedBy")
     private String updatedBy;
+
+    @NotNull
+    @Column(name="createdBY")
+    private String createdBy;
 
     public User() {
     }
@@ -56,7 +66,7 @@ public class User {
     this.phone = phone;
     this.password = password;
     this.roles =  roles;
-    this.updatedBy = email;
+    this.createdBy = email;
     }
 
     public String getName() {
@@ -107,28 +117,28 @@ public class User {
         this.roles = roles;
     }
 
-    public Instant getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Instant createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Instant getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Instant updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 
     public boolean isDeleted() {
-        return isDeleted;
+        return deleted;
     }
 
     public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
+        this.deleted = deleted;
     }
 
     public String getUpdatedBy() {
@@ -137,6 +147,22 @@ public class User {
 
     public void setUpdatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
     @Override
@@ -148,6 +174,11 @@ public class User {
                 ", phone='" + phone + '\'' +
                 ", password='" + password + '\'' +
                 ", roles='" + roles + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", deleted=" + deleted +
+                ", updatedBy='" + updatedBy + '\'' +
+                ", createdBy='" + createdBy + '\'' +
                 '}';
     }
 }

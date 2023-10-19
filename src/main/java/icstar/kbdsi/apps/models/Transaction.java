@@ -1,11 +1,13 @@
 package icstar.kbdsi.apps.models;
 
 import jakarta.persistence.*;
+import org.antlr.v4.runtime.misc.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SourceType;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.Date;
 
 @Entity
 @Table(name="transaction")
@@ -15,15 +17,19 @@ public class Transaction {
     @Column(name="transaction_id")
     private long transactionId;
 
+    @NotNull
     @Column(name="name")
     private String name;
 
+    @NotNull
     @Column(name="type")
     private String type;
 
+    @NotNull
     @Column(name="category")
-    private long categoryId;
+    private String category;
 
+    @NotNull
     @Column(name="amount")
     private Integer amount;
 
@@ -32,11 +38,11 @@ public class Transaction {
 
     @CreationTimestamp(source = SourceType.DB)
     @Column(name="createdAt")
-    private Instant createdAt;
+    private Date createdAt;
 
     @UpdateTimestamp(source = SourceType.DB)
     @Column(name="updatedAt")
-    private Instant updatedAt;
+    private Date updatedAt;
 
     @Column(name="isDeleted", columnDefinition = "boolean default false")
     private boolean isDeleted;
@@ -44,16 +50,29 @@ public class Transaction {
     @Column(name="updatedBy")
     private String updatedBy;
 
+    @NotNull
+    @Column(name="createdBy")
+    private String createdBy;
+
 
     public Transaction() {
     }
 
-    public Transaction(String name, String type, long categoryId, Integer amount, String description) {
+    public Transaction(String name, String type, String category, Integer amount, String description, String createdBy) {
         this.name = name;
         this.type = type;
-        this.categoryId = categoryId;
+        this.category = category;
         this.amount = amount;
         this.description = description;
+        this.createdBy= createdBy;
+    }
+
+    public long getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(long transactionId) {
+        this.transactionId = transactionId;
     }
 
     public String getName() {
@@ -72,12 +91,12 @@ public class Transaction {
         this.type = type;
     }
 
-    public long getCategoryId() {
-        return categoryId;
+    public String getCategory() {
+        return category;
     }
 
-    public void setCategoryId(long categoryId) {
-        this.categoryId = categoryId;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public Integer getAmount() {
@@ -96,19 +115,19 @@ public class Transaction {
         this.description = description;
     }
 
-    public Instant getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Instant createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Instant getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Instant updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -126,5 +145,13 @@ public class Transaction {
 
     public void setUpdatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 }

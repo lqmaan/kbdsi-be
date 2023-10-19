@@ -5,12 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
-@AllArgsConstructor
+@Getter
 @NoArgsConstructor
-public class ReminderDto {
-    private String status;
-    private Integer pageNum;
-    private Integer pageSize;
+@AllArgsConstructor
+public class DeleteDto {
+    long id;
+    String updatedBy;
 }

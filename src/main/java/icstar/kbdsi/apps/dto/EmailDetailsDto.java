@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmailDetailsDto {
+    private long reminderId;
     private String recipient;
     private String msgBody;
     private String subject;

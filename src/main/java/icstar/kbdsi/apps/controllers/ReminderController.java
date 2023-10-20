@@ -128,12 +128,6 @@ public class ReminderController {
         }
     }
 
-    @GetMapping("/reminders/status")
-    private Page<Reminder> getRemindersWithStatus(ReminderDto reminderDto) {
-        Page<Reminder> reminders = reminderService.findReminderContainingStatus(reminderDto.getStatus(), reminderDto.getPageNum(), reminderDto.getPageSize());
-        return reminders;
-    }
-
     @GetMapping("/reminders/description")
     private Page<Reminder> getRemindersWithDescription(PaginationReminderDto paginationReminderDto) {
         Page<Reminder> reminders = reminderService.findReminderContainingDescriptionAndStatus(paginationReminderDto.getDescription(), paginationReminderDto.getStatus(), paginationReminderDto.getPageNum(), paginationReminderDto.getPageSize());

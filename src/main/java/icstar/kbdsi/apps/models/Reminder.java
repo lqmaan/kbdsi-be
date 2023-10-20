@@ -19,7 +19,6 @@ public class Reminder {
     @Column(name="reminder_id")
     private long reminderId;
 
-
     @NotNull
     @Column(name="email")
     private String email;
@@ -29,7 +28,6 @@ public class Reminder {
     private String description;
 
     //Ongoing, Done
-
     @NotNull
     @Column(name="status", columnDefinition = "varchar(255) default 'ongoing'")
     private String status;

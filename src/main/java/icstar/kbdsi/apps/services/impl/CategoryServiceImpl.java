@@ -19,12 +19,6 @@ public class CategoryServiceImpl implements CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-
-    @Override
-    public Optional<Category> getCategoryById(Long id) {
-        return categoryRepository.findById(id);
-    }
-
     @Override
     public List<Category> getAllCategory() {
         return categoryRepository.findByIsDeleted(false);

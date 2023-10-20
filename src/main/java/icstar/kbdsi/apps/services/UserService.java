@@ -12,17 +12,11 @@ import java.util.Optional;
 public interface UserService {
     List<User> getAllUsers();
 
-    Optional<User> getUserById(Long id);
 
     User getUserByEmail(String email);
 
-    User getUserByName(String name);
-
     ResponseEntity<User> updateUserById(User newUser, Long id);
 
-    UserDetails loadUserByEmail(String email);
-    
-    void createUser(User user);
 
     Page<User> findUsersContainingName(String name, boolean isDeleted, Integer pageNum, Integer pageSize);
 

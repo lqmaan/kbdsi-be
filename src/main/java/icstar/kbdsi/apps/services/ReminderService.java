@@ -13,7 +13,6 @@ public interface ReminderService {
 
     List<Reminder> getAllReminders();
     List<Reminder> getAllRemindersWithStatus(String status);
-    Page<Reminder> findReminderContainingStatus(String status, Integer pageNum, Integer pageSize);
     Page<Reminder> findReminderContainingDescriptionAndStatus(String description, String status, Integer pageNum, Integer pageSize);
     List<Reminder> findAllReminderByScheduleAndStatusAndSend(Date scheduleDate, String status, boolean isSend);
     List<Reminder> findAllReminderByStatusAndRepeatedAndSend(String status, boolean isRepeated, boolean isSend);

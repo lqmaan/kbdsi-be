@@ -19,20 +19,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     Page<Transaction> findAllByCategoryContainingAndIsDeletedAndCreatedAtBetweenOrderByCreatedAtDesc(String category, boolean isDeleted, Date createdAtStart, Date createdAtEnd, PageRequest pageable, Sort sort);
 
-//    @Query("SELECT\n" +
-//            "  MAX(`transaction`.`amount`) AS `transaction__amount__max`\n" +
-//            "FROM\n" +
-//            "  `kbdsi`.`transaction`\n" +
-//            "WHERE\n" +
-//            "  (\n" +
-//            "    `transaction`.`created_at`>'2023-09-30 00:00'\n" +
-//            "    AND `transaction`.`created_at`<'2023-11-01 00:00'\n" +
-//            "    AND `transaction`.`is_deleted`=0\n" +
-//            "    AND `transaction`.`type`='income'\n" +
-//            "  )")
-//    Transaction getHighest();
-
-
     Transaction findTopByTypeAndIsDeletedOrderByAmountDesc(String type, Boolean isDeleted);
     Transaction findTopByTypeAndIsDeletedOrderByAmountAsc(String type, Boolean isDeleted);
 

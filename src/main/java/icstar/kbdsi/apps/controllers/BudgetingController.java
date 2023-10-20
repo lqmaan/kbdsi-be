@@ -50,7 +50,7 @@ public class BudgetingController {
             List<Budgeting> budgetings = new ArrayList<Budgeting>();
 
             if(name == null)
-                budgetings.addAll(budgetingRepository.findAll());
+                budgetings.addAll(budgetingRepository.findByIsDeleted(false));
             if(budgetings.isEmpty()){
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -86,10 +86,9 @@ public class BudgetingController {
                 oldBudgeting.setName(newBudgeting.getName());
                 oldBudgeting.setAmount(newBudgeting.getAmount());
                 oldBudgeting.setCategory(newBudgeting.getCategory());
+                oldBudgeting.setYear(newBudgeting.getYear());
+                oldBudgeting.setType(newBudgeting.getType());
                 oldBudgeting.setDescription(newBudgeting.getDescription());
-                oldBudgeting.setDescription(newBudgeting.getDescription());
-                oldBudgeting.setDescription(newBudgeting.getDescription());
-
                 oldBudgeting.setUpdatedBy(newBudgeting.getUpdatedBy());
                 budgetingRepository.save(oldBudgeting);
                 return new ResponseEntity<>(oldBudgeting, HttpStatus.OK);

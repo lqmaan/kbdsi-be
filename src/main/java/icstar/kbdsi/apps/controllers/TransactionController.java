@@ -49,7 +49,7 @@ public class TransactionController {
             List<Transaction> transactions = new ArrayList<Transaction>();
 
             if(name == null)
-                transactions.addAll(transactionRepository.findAll());
+                transactions.addAll(transactionService.getAllTransactions());
 //            else
 //                categoryRepository.findAllByName(name, PageRequest.of(0, 10, Sort.by("name").ascending()));
             if(transactions.isEmpty()){

@@ -37,33 +37,9 @@ public class UserServiceImpl implements UserService {
     public List<User> getAllUsers() {
         return userRepository.findByDeleted(false);
     }
-
-    @Override
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
-    }
-
     @Override
     public User getUserByEmail(String email) {
         return userRepository.findByEmailAndDeleted(email, false);
-    }
-    @Override
-    public User getUserByName(String name) {
-        return userRepository.findByNameAndDeleted(name, false);
-    }
-
-    @Override
-    public void createUser(User user) {
-        userRepository.save(user);
-    }
-
-    @Override
-    public UserDetails loadUserByEmail(String email) throws UsernameNotFoundException{
-        User user = userRepository.findByEmailAndDeleted(email, false);
-    if(user == null){
-        throw new UsernameNotFoundException("User Email not exists, Please register");
-    }
-    return new org.springframework.security.core.userdetails.User(email, user.getPassword(),null);
     }
 
     @Override

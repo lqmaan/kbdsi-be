@@ -60,13 +60,6 @@ public class EmailServiceImpl implements EmailService {
                     + "Team 14";
 
             mailMessage.setText(temp);
-
-            //mailMessage.setRecipient(Message.RecipientType.TO, InternetAddress.parse(emailDetailsDto.getRecipient()));
-            //mailMessage.setText(emailDetailsDto.getMsgBody());
-
-//            String htmlTemplate = Arrays.toString(readFile("html template"));
-//            htmlTemplate = htmlTemplate.replace("${name}", "John Doe");
-//            htmlTemplate = htmlTemplate.replace("${message}", "Hello, this is a test email.");
             javaMailSender.send(mailMessage);
             Optional<Reminder> optReminder = reminderRepository.findById(emailDetailsDto.getReminderId());
             if(optReminder.isPresent()) {
@@ -97,6 +90,14 @@ public class EmailServiceImpl implements EmailService {
             return "Error while sending email...";
         }
     }
+
+
+    //mailMessage.setRecipient(Message.RecipientType.TO, InternetAddress.parse(emailDetailsDto.getRecipient()));
+    //mailMessage.setText(emailDetailsDto.getMsgBody());
+
+//            String htmlTemplate = Arrays.toString(readFile("html template"));
+//            htmlTemplate = htmlTemplate.replace("${name}", "John Doe");
+//            htmlTemplate = htmlTemplate.replace("${message}", "Hello, this is a test email.");
 
 //    @Override
 //    public String sendMailWithAttachment(EmailDetailsDto emailDetailsDto) {

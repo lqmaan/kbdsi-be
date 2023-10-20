@@ -12,8 +12,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByDeleted(boolean isDeleted);
     Page<User> findByNameContainingAndDeleted(String name, boolean isDeleted, PageRequest pageable, Sort sort);
     User findByEmailAndDeleted(String email, boolean isDeleted);
-    User findByNameAndDeleted(String name, boolean isDeleted);
-    void findAllByName(String name, PageRequest pageRequest);
 
 
 }

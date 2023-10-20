@@ -8,15 +8,11 @@ import icstar.kbdsi.apps.util.UserExcelGenerator;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.print.Pageable;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -40,10 +36,11 @@ public class UserController {
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers (@RequestParam(required = false) String name){
         try{
-            List<User> users = new ArrayList<User>();
+            List<User> users = new ArrayList<>();
 
-            if(name == null)
-                userService.getAllUsers().forEach(users::add);
+            if(name == null) {
+                users.addAll(userService.getAllUsers());
+            }
             if(users.isEmpty()){
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -111,7 +108,6 @@ public class UserController {
         String headerValue= "attachment; filename=user_" + currentDateTime + ".xlsx";
         response.setHeader(headerKey,headerValue);
 
-//        List<User> listOfUsers = userRepository.findAll();
         List<User> listOfUsers = userService.getAllUsers();
         UserExcelGenerator generator = new UserExcelGenerator(listOfUsers);
         generator.generateExcelFile(response);

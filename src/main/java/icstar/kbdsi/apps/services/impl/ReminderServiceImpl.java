@@ -32,11 +32,6 @@ public class ReminderServiceImpl implements ReminderService {
         return reminderRepository.findByStatusContainingAndIsDeleted(status, false);
     }
 
-    public Page<Reminder> findReminderContainingStatus(String status, Integer pageNum, Integer pageSize){
-        Page<Reminder> reminders = reminderRepository.findByStatusContainingAndIsDeleted(status, false ,PageRequest.of(pageNum, pageSize), Sort.by("scheduleDate").ascending().and(Sort.by("description")));
-        return  reminders;
-    }
-
     @Override
     public Page<Reminder> findReminderContainingDescriptionAndStatus(String description, String status, Integer pageNum, Integer pageSize) {
         Page<Reminder> reminders = reminderRepository.findByDescriptionContainingAndStatusContainingAndIsDeleted(description, status, false ,PageRequest.of(pageNum, pageSize), Sort.by("scheduleDate").ascending().and(Sort.by("description")));

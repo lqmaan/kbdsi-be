@@ -92,7 +92,7 @@ public class BudgetingExcelGenerator {
             createCell(row, columnCount++, ++num , style);
             createCell(row, columnCount++, item.getBudgetId(), style);
             createCell(row, columnCount++, item.getDescription(), style);
-            createCell(row, columnCount++, item, style);
+            createCell(row, columnCount++, item.getCategory(), style);
             createCell(row, columnCount++, item.getType(), style);
             String rupiahFormat = new CurrencyStyleFormatter().print(item.getAmount(), new Locale("id", "ID"));
             createCell(row, columnCount++, rupiahFormat, style);

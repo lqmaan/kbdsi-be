@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.List;
 
 public interface ReminderRepository extends JpaRepository<Reminder, Long> {
-    Page<Reminder> findByStatusContainingAndIsDeleted(String status, boolean isDeleted, PageRequest pageable, Sort sort);
 
     Page<Reminder> findByDescriptionContainingAndStatusContainingAndIsDeleted(String description, String status, boolean isDeleted, PageRequest pageable, Sort sort);
 
